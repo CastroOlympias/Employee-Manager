@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS election;
-CREATE DATABASE election;
-USE election;
+DROP DATABASE IF EXISTS workforce;
+CREATE DATABASE workforce;
+USE workforce;
 
 SOURCE db/schema.sql;
 SOURCE db/seeds.sql;
