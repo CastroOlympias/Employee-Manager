@@ -2,6 +2,7 @@ const db = require('./db/connection')
 const inquirer = require('inquirer')
 require('console.table');
 
+
 const whatToDo = () => {
     inquirer.prompt([
         {
@@ -26,7 +27,7 @@ const whatToDo = () => {
                 newDepartment();
             }
             if (data.firstStep === 'Add a role') {
-                viewAllRoles();
+                newRole();
             }
             if (data.firstStep === 'Add an employee') {
                 viewAllEmployees();
@@ -37,31 +38,6 @@ const whatToDo = () => {
             if (data.firstStep === 'Update an employee role') {
                 viewAllEmployees();
             }
-        })
-}
-
-const newDepartment = () => {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'department',
-            message: 'Enter name for new a department',
-            // validate: departmentName => {
-            //     if (departmentName) {
-            //         return true;
-            //     } else {
-            //         console.log("Please enter a department name")
-            //         return false;
-            //     }
-            // }
-        }
-    ])
-        .then(data => {
-            const query = `INSERT INTO departments (name) VALUES ('${data.department}')`
-            db.query(query, (err, res) => {
-                console.table(res);
-                whatToDo();
-            }) 
         })
 }
 
@@ -90,13 +66,51 @@ const viewAllEmployees = () => {
     })
 }
 
-// const addDepartment = () => {
-//     const query = "INSERT INTO departments (name) VALUES ('jace')"
-//     db.query(query, (err, res) => {
-//         console.table(res);
-//         whatToDo();
-//     })
-// }
+const newDepartment = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'department',
+            message: 'Enter name for new a department',
+        }
+    ])
+        .then(data => {
+            const query = `INSERT INTO departments (name) VALUES ('${data.department}')`
+            db.query(query, (err, res) => {
+                console.table(res);
+                whatToDo();
+            }) 
+        })
+}
 
+const newRole = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'title',
+            message: 'Enter title for new a role',
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'Enter salary for the new role',
+        },
+        {
+            type: 'input',
+            name: 'department',
+            message: 'Enter title for new a role',
+        }
+
+    ])
+        .then(data => {
+            const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.title}','${data.salary}','${data.department}')`
+            db.query(query, (err, res) => {
+                console.table(res);
+                console.log(data);
+                whatToDo();
+            }) 
+        })
+
+}
 
 whatToDo();

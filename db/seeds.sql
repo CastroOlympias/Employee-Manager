@@ -3,17 +3,17 @@ VALUES
   ('Excelsior'), ('Mediocre'),('Underdog');
 
 
-INSERT INTO roles (title, salary ,email, department_id)
+INSERT INTO roles (title, salary, department_id)
 VALUES
-  ('Manager', '200020', 'jf@goldenbough.edu', 1),
-  ('Supervisor', '100020', 'jlondon@ualaska.edu', 1),
-  ('Agent', '60000', 'rbruce@scotland.net', 1),
-  ('Manager', '200010', 'pgreenaway@postmodern.com', 2),
-  ('Supervisor', '100010', 'djarman@prospectcottage.net', 2),
-  ('Agent', '50000', 'ppasolini@salo.com', 2),
-  ('Manager', '200000', 'hwilliams@bafta.com', 3),
-  ('Supervisor', '100000', 'spowell@oscars.com', 3),
-  ('Agent', '40000', 'ezola@requin.com', 3);
+  ('Manager', '200020', 1),
+  ('Supervisor', '100020', 1),
+  ('Agent', '60000', 1),
+  ('Manager', '200010', 2),
+  ('Supervisor', '100010', 2),
+  ('Agent', '50000', 2),
+  ('Manager', '200000', 3),
+  ('Supervisor', '100000', 3),
+  ('Agent', '40000', 3);
  
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
