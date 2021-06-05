@@ -4,6 +4,12 @@ require('console.table');
 
 
 const whatToDo = () => {
+console.log(`
+================================================
+   Welcome to the Employee Management System!
+================================================
+    `
+)
     inquirer.prompt([
         {
             type: 'list',
