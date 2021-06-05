@@ -1,4 +1,4 @@
-INSERT INTO department (name)
+INSERT INTO departments (name)
 VALUES
   ('Excelsior'), ('Mediocre'),('Underdog');
 
@@ -16,7 +16,7 @@ VALUES
   ('Agent', '40000', 'ezola@requin.com', 3);
  
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
   ('James', 'Fraser', 1, 1),
   ('Jack', 'London', 1, 1),
