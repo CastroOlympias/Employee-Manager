@@ -30,10 +30,7 @@ const whatToDo = () => {
                 newRole();
             }
             if (data.firstStep === 'Add an employee') {
-                viewAllEmployees();
-            }
-            if (data.firstStep === 'Add an employee') {
-                viewAllEmployees();
+                newEmployee();
             }
             if (data.firstStep === 'Update an employee role') {
                 viewAllEmployees();
@@ -41,7 +38,7 @@ const whatToDo = () => {
         })
 }
 
-// Query functions and callbacks
+// Query functions to display tables
 const viewAllDepartments = () => {
     const query = "SELECT * FROM departments"
     db.query(query, (err, res) => {
@@ -79,9 +76,10 @@ const newDepartment = () => {
             db.query(query, (err, res) => {
                 console.table(res);
                 whatToDo();
-            }) 
+            })
         })
 }
+
 
 const newRole = () => {
     inquirer.prompt([
@@ -98,19 +96,52 @@ const newRole = () => {
         {
             type: 'input',
             name: 'department',
-            message: 'Enter title for new a role',
+            message: 'Enter manager for new a role',
         }
-
     ])
         .then(data => {
             const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.title}','${data.salary}','${data.department}')`
             db.query(query, (err, res) => {
                 console.table(res);
-                console.log(data);
                 whatToDo();
-            }) 
+            })
         })
-
 }
+
+
+
+const newEmployee = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstname',
+            message: 'Enter employee first name',
+        },
+        {
+            type: 'input',
+            name: 'lastname',
+            message: 'Enter employee last name',
+        },
+        {
+            type: 'input',
+            name: 'role',
+            message: "Enter emplyee's role",
+        },
+        {
+            type: 'input',
+            name: 'manager',
+            message: "Enter emplyee's manager"
+        }
+    ])
+        .then(data => {
+            const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}','${data.role}','${data.manager}')`
+            db.query(query, (err, res) => {
+                console.table(res);
+                whatToDo();
+            })
+        })
+}
+
+
 
 whatToDo();
