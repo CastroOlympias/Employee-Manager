@@ -33,7 +33,7 @@ const whatToDo = () => {
                 newEmployee();
             }
             if (data.firstStep === 'Update an employee role') {
-                viewAllEmployees();
+                updateEmployeeRole();
             }
         })
 }
@@ -135,6 +135,28 @@ const newEmployee = () => {
     ])
         .then(data => {
             const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}','${data.role}','${data.manager}')`
+            db.query(query, (err, res) => {
+                console.table(res);
+                whatToDo();
+            })
+        })
+}
+
+const updateEmployeeRole = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newRole',
+            message: 'Enter a new role id number',
+        },
+        {
+            type: 'input',
+            name: 'employee',
+            message: 'Enter employee id number to update role',
+        },
+    ])
+        .then(data => {
+            const query = `UPDATE employees SET role_id = ${data.newRole} WHERE id = ${data.employee}`
             db.query(query, (err, res) => {
                 console.table(res);
                 whatToDo();
