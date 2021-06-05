@@ -4,12 +4,12 @@ require('console.table');
 
 
 const whatToDo = () => {
-console.log(`
+    console.log(`
 ================================================
    Welcome to the Employee Management System!
 ================================================
     `
-)
+    )
     inquirer.prompt([
         {
             type: 'list',
@@ -44,30 +44,7 @@ console.log(`
         })
 }
 
-// Query functions to display tables
-const viewAllDepartments = () => {
-    const query = "SELECT * FROM departments"
-    db.query(query, (err, res) => {
-        console.table(res);
-        whatToDo();
-    })
-}
 
-const viewAllRoles = () => {
-    const query = 'SELECT * FROM roles'
-    db.query(query, (err, res) => {
-        console.table(res);
-        whatToDo();
-    })
-}
-
-const viewAllEmployees = () => {
-    const query = 'SELECT * FROM employees'
-    db.query(query, (err, res) => {
-        console.table(res);
-        whatToDo();
-    })
-}
 
 const newDepartment = () => {
     inquirer.prompt([
@@ -114,9 +91,25 @@ const newRole = () => {
         })
 }
 
-
+// const selectManager = () => {
+//     const query = `SELECT * FROM employees WHERE manager_id IS null`
+//     db.query(query, (err, res) => {
+//         const choices = res.map(({ id, first_name, last_name }) => ({
+//             name: `${first_name} ${last_name}`,
+//             value: id
+//         }))
+//     })
+//     return choices
+// }
 
 const newEmployee = () => {
+    const roleQuery = `SELECT * FROM roles`
+    db.query(roleQuery, (err, res) => {
+        const choices = res.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
+    
     inquirer.prompt([
         {
             type: 'input',
@@ -129,9 +122,10 @@ const newEmployee = () => {
             message: 'Enter employee last name',
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'role',
             message: "Enter emplyee's role",
+            choices: choices
         },
         {
             type: 'input',
@@ -146,6 +140,7 @@ const newEmployee = () => {
                 whatToDo();
             })
         })
+    })
 }
 
 const updateEmployeeRole = () => {
@@ -170,6 +165,62 @@ const updateEmployeeRole = () => {
         })
 }
 
+// Query functions to display tables
+const viewAllDepartments = () => {
+    console.log(`
+================================================
+                All Deparments!
+================================================
+    `
+    )
+    const query = "SELECT * FROM departments"
+    db.query(query, (err, res) => {
+        console.table(res);
+        whatToDo();
+    })
+}
+
+const viewAllRoles = () => {
+    console.log(`
+================================================
+                  All Roles!
+================================================
+        `
+        )
+    const query = 'SELECT * FROM roles'
+    db.query(query, (err, res) => {
+        console.table(res);
+        whatToDo();
+    })
+}
+
+const viewAllEmployees = () => {
+    console.log(`
+================================================
+ All Employees, Roles, Department and Managers!
+================================================
+        `
+        )
+    const query = 'SELECT * FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id'
+    db.query(query, (err, res) => {
+        console.table(res);
+        whatToDo();
+    })
+}
+
+// const viewAllEmployees = () => {
+//     console.log(`
+// ================================================
+//  All Employees, Roles, Department and Managers!
+// ================================================
+//         `
+//         )
+//     const query = 'SELECT * FROM employees'
+//     db.query(query, (err, res) => {
+//         console.table(res);
+//         whatToDo();
+//     })
+// }
 
 
 whatToDo();
