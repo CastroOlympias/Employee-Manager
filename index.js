@@ -73,7 +73,7 @@ const newRole = () => {
         inquirer.prompt([
             {
                 type: 'list',
-                name: 'name',
+                name: 'title',
                 message: 'Enter name for a role?',
                 choices: ['Manager', 'Supervisor', 'Sales', 'Customer Service',]
             },
@@ -90,7 +90,7 @@ const newRole = () => {
             }
         ])
             .then(data => {
-                const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.name}','${data.salary}','${data.department}')`
+                const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.title}','${data.salary}','${data.department}')`
                 db.query(query, (err, res) => {
                     console.table(res);
                     whatToDo();
@@ -141,11 +141,11 @@ const newEmployee = () => {
                 }
             ])
                 .then(data => {
-                    const query = 
-                    db.query(query, (err, res) => {
-                        console.table(res);
-                        whatToDo();
-                    })
+                    const query =
+                        db.query(query, (err, res) => {
+                            console.table(res);
+                            whatToDo();
+                        })
                 })
         })
     })
