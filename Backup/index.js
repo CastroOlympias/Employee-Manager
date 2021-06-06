@@ -73,9 +73,62 @@ const newRole = () => {
         inquirer.prompt([
             {
                 type: 'list',
-                name: 'name',
+                name: 'role',
                 message: 'Enter name for a role?',
-                choices: ['Manager', 'Supervisor', 'Sales', 'Customer Service',]
+                choices: ['Manager', 'Subordinate',]
+            },
+        ])
+            .then(data => {
+                if (data.role === 'Manager') {
+                    addManager();
+                } else {
+                    addSubordinateRole();
+                }
+            })
+    })
+}
+
+const addManager = () => {
+    const departmentQuery = `SELECT * FROM departments`
+    db.query(departmentQuery, (err, res) => {
+        const departmentChoices = res.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'firstname',
+                message: 'Enter Manager first name',
+            },
+            {
+                type: 'input',
+                name: 'lastname',
+                message: 'Enter Manager last name',
+            },
+            {
+                type: 'list',
+                name: 'department',
+                message: 'Asign Manager to department?',
+                choices: departmentChoices
+            }
+        ])
+    })
+}
+
+const addSubordinateRole = () => {
+    const departmentQuery = `SELECT * FROM departments`
+    db.query(departmentQuery, (err, res) => {
+        const departmentChoices = res.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'role',
+                message: 'Enter name for a role?',
+                choices: ['Manager', 'Supervisor', 'Agent', 'Sales', 'Reseptionist',]
             },
             {
                 type: 'input',
@@ -90,12 +143,18 @@ const newRole = () => {
             }
         ])
             .then(data => {
-                const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.name}','${data.salary}','${data.department}')`
+                if (data.role === 'Manager') {
+                    addManager();
+                }
+            })
+            .then(data => {
+                const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.role}','${data.salary}','${data.department}')`
                 db.query(query, (err, res) => {
                     console.table(res);
                     whatToDo();
                 })
             })
+
     })
 }
 
@@ -130,18 +189,18 @@ const newEmployee = () => {
                 {
                     type: 'list',
                     name: 'role',
-                    message: "Enter employee's role",
+                    message: "Enter emplyee's role",
                     choices: roleChoices
                 },
                 {
                     type: 'list',
                     name: 'manager',
-                    message: "Enter employee's manager",
+                    message: "Enter emplyee's manager",
                     choices: managerChoices
                 }
             ])
                 .then(data => {
-                    const query = 
+                    const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}','${data.role}','${data.manager}')`
                     db.query(query, (err, res) => {
                         console.table(res);
                         whatToDo();

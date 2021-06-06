@@ -20,4 +20,3 @@ VALUES
   ('Heathcote', 'Williams', 1, 3),
   ('Sandy', 'Powell', 2, 3),
   ('Emil', 'Zola', 3, 3);
-
