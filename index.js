@@ -15,7 +15,7 @@ const whatToDo = () => {
             type: 'list',
             name: 'firstStep',
             message: 'What would you like to do?',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Employee role', 'Update an employee role', 'Exit']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role',]
         }
     ])
 
@@ -91,78 +91,92 @@ const newRole = () => {
         })
 }
 
-// const selectManager = () => {
-//     const query = `SELECT * FROM employees WHERE manager_id IS null`
-//     db.query(query, (err, res) => {
-//         const choices = res.map(({ id, first_name, last_name }) => ({
-//             name: `${first_name} ${last_name}`,
-//             value: id
-//         }))
-//     })
-//     return choices
-// }
-
 const newEmployee = () => {
     const roleQuery = `SELECT * FROM roles`
     db.query(roleQuery, (err, res) => {
-        const choices = res.map(({ id, title }) => ({
+        const roleChoices = res.map(({ id, title }) => ({
             name: title,
             value: id
         }))
-    
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'firstname',
-            message: 'Enter employee first name',
-        },
-        {
-            type: 'input',
-            name: 'lastname',
-            message: 'Enter employee last name',
-        },
-        {
-            type: 'list',
-            name: 'role',
-            message: "Enter emplyee's role",
-            choices: choices
-        },
-        {
-            type: 'input',
-            name: 'manager',
-            message: "Enter emplyee's manager"
-        }
-    ])
-        .then(data => {
-            const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}','${data.role}','${data.manager}')`
-            db.query(query, (err, res) => {
-                console.table(res);
-                whatToDo();
-            })
+
+        const managerQuery = `SELECT * FROM employees WHERE manager_id IS NULL`
+        db.query(managerQuery, (err, res) => {
+            const managerChoices = res.map(({ id, first_name, last_name }) => ({
+                name: `${first_name} ${last_name}`,
+                value: id
+            }))
+
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'firstname',
+                    message: 'Enter employee first name',
+                },
+                {
+                    type: 'input',
+                    name: 'lastname',
+                    message: 'Enter employee last name',
+                },
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: "Enter emplyee's role",
+                    choices: roleChoices
+                },
+                {
+                    type: 'list',
+                    name: 'manager',
+                    message: "Enter emplyee's manager",
+                    choices: managerChoices
+                }
+            ])
+                .then(data => {
+                    const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}','${data.role}','${data.manager}')`
+                    db.query(query, (err, res) => {
+                        console.table(res);
+                        whatToDo();
+                    })
+                })
         })
     })
 }
 
 const updateEmployeeRole = () => {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'newRole',
-            message: 'Enter a new role id number',
-        },
-        {
-            type: 'input',
-            name: 'employee',
-            message: 'Enter employee id number to update role',
-        },
-    ])
-        .then(data => {
-            const query = `UPDATE employees SET role_id = ${data.newRole} WHERE id = ${data.employee}`
-            db.query(query, (err, res) => {
-                console.table(res);
-                whatToDo();
-            })
+    const newRoleQuery = `SELECT * FROM roles`
+    db.query(newRoleQuery, (err, res) => {
+        const newRoleChoices = res.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
+        const selectEmployeeQuery = `SELECT * FROM employees WHERE manager_id IS NOT NULL`
+        db.query(selectEmployeeQuery, (err, res) => {
+            const employeeChoices = res.map(({ id, first_name, last_name }) => ({
+                name: `${first_name} ${last_name}`,
+                value: id
+            }))
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'newRole',
+                    message: 'Enter a new role id number',
+                    choices: newRoleChoices
+                },
+                {
+                    type: 'list',
+                    name: 'employee',
+                    message: 'Enter employee id number to update role',
+                    choices: employeeChoices
+                },
+            ])
+                .then(data => {
+                    const query = `UPDATE employees SET role_id = ${data.newRole} WHERE id = ${data.employee}`
+                    db.query(query, (err, res) => {
+                        console.table(res);
+                        whatToDo();
+                    })
+                })
         })
+    })
 }
 
 // Query functions to display tables
@@ -186,7 +200,7 @@ const viewAllRoles = () => {
                   All Roles!
 ================================================
         `
-        )
+    )
     const query = 'SELECT * FROM roles'
     db.query(query, (err, res) => {
         console.table(res);
@@ -200,27 +214,12 @@ const viewAllEmployees = () => {
  All Employees, Roles, Department and Managers!
 ================================================
         `
-        )
+    )
     const query = 'SELECT * FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id'
     db.query(query, (err, res) => {
         console.table(res);
         whatToDo();
     })
 }
-
-// const viewAllEmployees = () => {
-//     console.log(`
-// ================================================
-//  All Employees, Roles, Department and Managers!
-// ================================================
-//         `
-//         )
-//     const query = 'SELECT * FROM employees'
-//     db.query(query, (err, res) => {
-//         console.table(res);
-//         whatToDo();
-//     })
-// }
-
 
 whatToDo();
