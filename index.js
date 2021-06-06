@@ -55,7 +55,7 @@ const newDepartment = () => {
         }
     ])
         .then(data => {
-            const query = `INSERT INTO departments (name) VALUES ('${data.department}')`
+            const query = `INSERT INTO departments (title) VALUES ('${data.department}')`
             db.query(query, (err, res) => {
                 console.table(res);
                 whatToDo();
@@ -65,30 +65,38 @@ const newDepartment = () => {
 
 
 const newRole = () => {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'title',
-            message: 'Enter title for new a role',
-        },
-        {
-            type: 'input',
-            name: 'salary',
-            message: 'Enter salary for the new role',
-        },
-        {
-            type: 'input',
-            name: 'department',
-            message: 'Enter manager for new a role',
-        }
-    ])
-        .then(data => {
-            const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.title}','${data.salary}','${data.department}')`
-            db.query(query, (err, res) => {
-                console.table(res);
-                whatToDo();
+    const departmentQuery = `SELECT * FROM departments`
+    db.query(departmentQuery, (err, res) => {
+        const departmentChoices = res.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'name',
+                message: 'Enter name for a role?',
+            },
+            {
+                type: 'input',
+                name: 'salary',
+                message: 'Enter salary for the role?',
+            },
+            {
+                type: 'list',
+                name: 'department',
+                message: 'Select department for the role?',
+                choices: departmentChoices
+            }
+        ])
+            .then(data => {
+                const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.name}','${data.salary}','${data.department}')`
+                db.query(query, (err, res) => {
+                    console.table(res);
+                    whatToDo();
+                })
             })
-        })
+    })
 }
 
 const newEmployee = () => {
