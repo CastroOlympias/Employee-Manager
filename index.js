@@ -109,7 +109,7 @@ const newEmployee = () => {
             value: id
         }))
 
-        const managerQuery = `SELECT * FROM employees WHERE manager_id IS NULL`
+        const managerQuery = `SELECT * FROM employees WHERE role_id = 1`
         db.query(managerQuery, (err, res) => {
             const managerChoices = res.map(({ id, first_name, last_name }) => ({
                 name: `${first_name} ${last_name}`,
@@ -141,11 +141,11 @@ const newEmployee = () => {
                 }
             ])
                 .then(data => {
-                    const query =
-                        db.query(query, (err, res) => {
-                            console.table(res);
-                            whatToDo();
-                        })
+                    const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}','${data.role}','${data.manager}')`
+                    db.query(query, (err, res) => {
+                        console.table(res);
+                        whatToDo();
+                    })
                 })
         })
     })
