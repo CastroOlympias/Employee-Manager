@@ -5,21 +5,20 @@ DROP TABLE IF EXISTS departments;
 
 CREATE TABLE departments (
   id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(30) NOT NULL
+  dept_title VARCHAR(30) NOT NULL
 );
-
-
 
 
 CREATE TABLE roles (
   id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(30) NOT NULL,
+  role_title VARCHAR(30) UNIQUE NOT NULL,
   salary DECIMAL(30) NOT NULL,
   department_id INTEGER NOT NULL,
   FOREIGN KEY (department_id)
   REFERENCES departments(id)
   ON DELETE CASCADE
   );
+
 
 CREATE TABLE employees (
   id INTEGER AUTO_INCREMENT PRIMARY KEY,

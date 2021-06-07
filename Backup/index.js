@@ -100,9 +100,79 @@ const newRole = () => {
 }
 
 
-
 const newEmployee = () => {
     const roleQuery = `SELECT * FROM roles`
+    db.query(roleQuery, (err, res) => {
+        const roleChoices = res.map(({ id, title }) => ({
+            name: `${title}`,
+            value: id
+        }))
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'roles',
+                message: "Enter employee's role",
+                choices: roleChoices
+            },
+        ])
+            .then(data => {
+                console.log(data.roles)
+                if (data.roles === 1) {
+                    createManager();
+                }
+                else {
+                    createSubordinate();
+                }
+            })
+    })
+}
+
+const createManager = () => {
+    // const depatmentQuery = `SELECT * FROM departments`
+    // db.query(depatmentQuery, (err, res) => {
+    //     const departmentChoices = res.map(({ id, title }) => ({
+    //         name: title,
+    //         value: id
+    //     }))
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstname',
+            message: 'Enter employee first name',
+        },
+        {
+            type: 'input',
+            name: 'lastname',
+            message: 'Enter employee last name',
+        },
+        // {
+        //     type: 'list',
+        //     name: 'department',
+        //     message: 'Assign Manager to department',
+        //     choices: departmentChoices
+        // },
+    ])
+        .then(data => {
+            const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}', 1, NULL)`
+            db.query(query, (err, res) => {
+                console.table(res);
+                whatToDo();
+
+                const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}', 1, NULL)`
+                db.query(query, (err, res) => {
+                    console.table(res);
+                    whatToDo();
+            })
+        })
+    // })
+}
+
+
+
+
+
+const createSubordinate = () => {
+    const roleQuery = `SELECT * FROM roles WHERE id > 1;`
     db.query(roleQuery, (err, res) => {
         const roleChoices = res.map(({ id, title }) => ({
             name: title,
