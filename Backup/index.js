@@ -55,7 +55,7 @@ const newDepartment = () => {
         }
     ])
         .then(data => {
-            const query = `INSERT INTO departments (title) VALUES ('${data.department}')`
+            const query = `INSERT INTO departments (dept_title) VALUES ('${data.department}')`
             db.query(query, (err, res) => {
                 console.table(res);
                 whatToDo();
@@ -66,8 +66,8 @@ const newDepartment = () => {
 const newRole = () => {
     const departmentQuery = `SELECT * FROM departments`
     db.query(departmentQuery, (err, res) => {
-        const departmentChoices = res.map(({ id, title }) => ({
-            name: title,
+        const departmentChoices = res.map(({ id, dept_title }) => ({
+            name: dept_title,
             value: id
         }))
         inquirer.prompt([
@@ -75,7 +75,7 @@ const newRole = () => {
                 type: 'list',
                 name: 'title',
                 message: 'Enter name for a role?',
-                choices: ['Manager', 'Supervisor', 'Sales', 'Customer Service',]
+                choices: ['Manager', 'Subordinate',]
             },
             {
                 type: 'input',
@@ -90,7 +90,7 @@ const newRole = () => {
             }
         ])
             .then(data => {
-                const query = `INSERT INTO roles (title, salary, department_id) VALUES ('${data.title}','${data.salary}','${data.department}')`
+                const query = `INSERT INTO roles (role_title, salary, department_id) VALUES ('${data.title}','${data.salary}','${data.department}')`
                 db.query(query, (err, res) => {
                     console.table(res);
                     whatToDo();
@@ -103,9 +103,9 @@ const newRole = () => {
 const newEmployee = () => {
     const roleQuery = `SELECT * FROM roles`
     db.query(roleQuery, (err, res) => {
-        const roleChoices = res.map(({ id, title }) => ({
-            name: `${title}`,
-            value: id
+        const roleChoices = res.map(({ id, role_title }) => ({
+            name: role_title,
+            value: id,
         }))
         inquirer.prompt([
             {
@@ -128,54 +128,54 @@ const newEmployee = () => {
 }
 
 const createManager = () => {
-    // const depatmentQuery = `SELECT * FROM departments`
-    // db.query(depatmentQuery, (err, res) => {
-    //     const departmentChoices = res.map(({ id, title }) => ({
-    //         name: title,
-    //         value: id
-    //     }))
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'firstname',
-            message: 'Enter employee first name',
-        },
-        {
-            type: 'input',
-            name: 'lastname',
-            message: 'Enter employee last name',
-        },
-        // {
-        //     type: 'list',
-        //     name: 'department',
-        //     message: 'Assign Manager to department',
-        //     choices: departmentChoices
-        // },
-    ])
-        .then(data => {
-            const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}', 1, NULL)`
-            db.query(query, (err, res) => {
-                console.table(res);
-                whatToDo();
-
-                const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}', 1, NULL)`
-                db.query(query, (err, res) => {
+    const depatmentQuery = `SELECT * FROM departments`
+    db.query(depatmentQuery, (err, res) => {
+        const departmentChoices = res.map(({ role_id, role_title, dept_id, dept_title }) => ({
+            name: `${role_title, dept_title}`,
+            value: `${role_id, dept_id}`
+        }))
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'firstname',
+                message: 'Enter employee first name',
+            },
+            {
+                type: 'input',
+                name: 'lastname',
+                message: 'Enter employee last name',
+            },
+            {
+                type: 'list',
+                name: 'department',
+                message: 'Assign Manager to department',
+                choices: departmentChoices
+            },
+        ])
+            .then(data => {
+                const queryOne = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${data.firstname}','${data.lastname}', 1, NULL)`
+                db.query(queryOne, (err, res) => {
                     console.table(res);
-                    whatToDo();
+                    // whatToDo();
+
+                    const query = `SET INTO roles (id) VALUES ('3')`
+                    db.query(query, (err, res) => {
+                        console.table(res);
+                        whatToDo();
+                    })
+                })
             })
-        })
-    // })
+    })
 }
 
 
 
 
-
 const createSubordinate = () => {
-    const roleQuery = `SELECT * FROM roles WHERE id > 1;`
+    const roleQuery = `SELECT * FROM roles WHERE roles.role_title  != ('Manager')`
     db.query(roleQuery, (err, res) => {
-        const roleChoices = res.map(({ id, title }) => ({
-            name: title,
+        const roleChoices = res.map(({ id, role_title }) => ({
+            name: role_title,
             value: id
         }))
 
@@ -303,3 +303,8 @@ const viewAllEmployees = () => {
 }
 
 whatToDo();
+
+
+    // SELECT employees.id, employees.first_name, employees.last_name, roles.id AS role_id, roles.title AS role_name, departments.id, departments.title FROM employees INNER JOIN roles ON employees.id = roles.id INNER JOIN departments ON roles.id = departments.id;
+
+    // SELECT employees.id, employees.first_name, employees.last_name, roles.id AS role_id, roles.title AS role_name, departments.id AS dept_id, departments.title FROM employees INNER JOIN roles ON employees.id = roles.id INNER JOIN departments ON roles.id = departments.id;

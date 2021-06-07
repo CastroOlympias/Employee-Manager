@@ -75,7 +75,7 @@ const newRole = () => {
                 type: 'list',
                 name: 'title',
                 message: 'Enter name for a role?',
-                choices: ['Manager', 'Subordinate',]
+                choices: ['Manager', 'Supervisor', 'Sales', 'Agent',]
             },
             {
                 type: 'input',
@@ -101,30 +101,30 @@ const newRole = () => {
 
 
 const newEmployee = () => {
-    const roleQuery = `SELECT * FROM roles`
-    db.query(roleQuery, (err, res) => {
-        const roleChoices = res.map(({ id, role_title }) => ({
-            name: role_title,
-            value: id,
-        }))
+    // const roleQuery = `SELECT * FROM roles`
+    // db.query(roleQuery, (err, res) => {
+    //     const roleChoices = res.map(({ id, role_title }) => ({
+    //         name: role_title,
+    //         value: id,
+    //     }))
         inquirer.prompt([
             {
                 type: 'list',
                 name: 'roles',
                 message: "Enter employee's role",
-                choices: roleChoices
+                choices: ['Manager', 'Subordinate']
             },
         ])
             .then(data => {
                 console.log(data.roles)
-                if (data.roles === 1) {
+                if (data.roles === 'Manager') {
                     createManager();
                 }
                 else {
                     createSubordinate();
                 }
             })
-    })
+    // })
 }
 
 const createManager = () => {
@@ -222,10 +222,10 @@ const createSubordinate = () => {
 }
 
 const updateEmployeeRole = () => {
-    const newRoleQuery = `SELECT * FROM roles`
+    const newRoleQuery = `SELECT * FROM roles WHERE roles.role_title  != ('Manager')`
     db.query(newRoleQuery, (err, res) => {
-        const newRoleChoices = res.map(({ id, title }) => ({
-            name: title,
+        const newRoleChoices = res.map(({ id, role_title }) => ({
+            name: role_title,
             value: id
         }))
         const selectEmployeeQuery = `SELECT * FROM employees WHERE manager_id IS NOT NULL`
