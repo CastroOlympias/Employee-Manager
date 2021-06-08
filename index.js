@@ -74,7 +74,7 @@ const newRole = () => {
             {
                 type: 'list',
                 name: 'title',
-                message: 'Enter name for a role?',
+                message: 'Select role for the job?',
                 choices: ['Manager', 'Supervisor', 'Sales', 'Agent',]
             },
             {
@@ -111,7 +111,7 @@ const newEmployee = () => {
             {
                 type: 'list',
                 name: 'roles',
-                message: "Enter employee's role",
+                message: "Choose management or subordinate role setup",
                 choices: ['Manager', 'Subordinate']
             },
         ])
@@ -148,7 +148,7 @@ const createManager = () => {
             {
                 type: 'list',
                 name: 'department',
-                message: 'Assign Manager to department',
+                message: 'Assign Manager to a department',
                 choices: departmentChoices
             },
         ])
@@ -200,7 +200,7 @@ const createSubordinate = () => {
                 {
                     type: 'list',
                     name: 'role',
-                    message: "Enter employee's role",
+                    message: "Choose employee's role",
                     choices: roleChoices
                 },
                 {
@@ -238,13 +238,13 @@ const updateEmployeeRole = () => {
                 {
                     type: 'list',
                     name: 'newRole',
-                    message: 'Enter a new role id number',
+                    message: 'Select new role',
                     choices: newRoleChoices
                 },
                 {
                     type: 'list',
                     name: 'employee',
-                    message: 'Enter employee id number to update role',
+                    message: 'Select employee for role change',
                     choices: employeeChoices
                 },
             ])
