@@ -3,7 +3,7 @@
 # (EMS) Employee Management System
 
 ## Description
-  In this command line interfacing app, you can create managers and other employee, adding their roles, and assign them to departments, you can even modify employees as promotions are made available with increased salary.
+  In this command line interfacing app, you can create managers and other employee, adding their roles, and assign them to departments, you can even modify employees as promotions are made available with increased salary. For a higher resolution video demo please click <a href="https://github.com/CastroOlympias/Employee-Manager/blob/main/media/demo/Employee%20Manager%20System.mp4?raw=true">here.</a>
 
 <img src="https://github.com/CastroOlympias/Employee-Manager/blob/main/media/demo/Employee%20Manager%20System.gif"/>
 
